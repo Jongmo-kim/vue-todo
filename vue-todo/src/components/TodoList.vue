@@ -1,10 +1,10 @@
 <template>
     <div>
         <transition-group name="list" tag="ul">
-            <li v-for="(todoItem, index) in propsdata" v-bind:key="todoItem" class="shadow ">
-                <i class="fas fa-check checkBtn" v-on:click="toggleComplete(todoItem, index)" v-bind:class="{checkBtnCompleted: todoItem.completed}"></i>
+            <li v-for="(todoItem, index) in this.storedTodoItems" v-bind:key="todoItem" class="shadow ">
+                <i class="fas fa-check checkBtn" v-on:click="toggleComplete({todoItem, index})" v-bind:class="{checkBtnCompleted: todoItem.completed}"></i>
                 <span v-bind:class="{textCompleted: todoItem.completed}">{{todoItem.item}}</span>
-                <span class="removeBtn" v-on:click="removeTodo(todoItem, index)">
+                <span class="removeBtn" v-on:click="removeTodo({todoItem, index})">
                     <i class="fas fa-trash-alt"></i>
                 </span>
             </li>
@@ -13,16 +13,18 @@
 </template>
 
 <script>
+import {mapGetters, mapMutations} from 'vuex'
 export default {
-    props: ['propsdata'],
     methods: {
-        removeTodo: function(todoItem, index){
-            this.$emit('removeItem',todoItem,index);
-        },
-        toggleComplete: function(todoItem, index){
-            this.$emit('toggleItem',todoItem,index);
-        }
+        ...mapMutations({
+            removeTodo: 'removeOneItem',
+            toggleComplete : 'toggleOneItem'
+        }),
+    },
+    computed: {
+        ...mapGetters(['storedTodoItems'])
     }
+    
 }
 </script>
 
@@ -63,7 +65,7 @@ li {
 }
 /* 리스트 아이템 트렌지션 효과 */
 .list-enter-active, .list-leave-active {
-  transition: all 1s;
+  transition: all 0.4s;
 }
 .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity: 0;

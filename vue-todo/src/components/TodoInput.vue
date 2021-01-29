@@ -5,40 +5,41 @@
             <i class="fas fa-plus addBtn" v-on:click="addTodo"  @click="showModal = true" id="showModal"></i>
         </span>
         <modal v-if="showModal" @close="showModal = false">
-            <h3 slot="header">경고 경고 그래도
+            <h3 slot="header">경고
                 <i class="fas fa-times closeModalBtn" @click="showModal = false"></i>
             </h3>
-            <h4 slot="body">쳐박힐</h4>
-            <h4 slot="footer">메테오야</h4>
+            <h4 slot="body">값이 입력되지 않았습니다.</h4>
         </modal>
     </div>
 </template>
 
 <script>
 import Modal from './common/Modal'
+import {mapMutations} from 'vuex'
+
 export default {
-    data: function(){
+    data(){
         return {
             newTodoItem: "",
             showModal : false
         }
     },
     methods: {
-        addTodo: function(){
+        addTodo(){
             if (this.newTodoItem !== '') {
-               this.$emit('addTodoItem',this.newTodoItem);
+                this.$store.commit('addOneItem',this.newTodoItem);
                 this.clearInput();
             } else {
                 this.showModal = !this.showModal;
             }
         },
-        clearInput: function(){
+        clearInput(){
             this.newTodoItem = '';
 
         },
     },
         components:{
-            Modal: Modal
+            Modal
         }
 }
 </script>
